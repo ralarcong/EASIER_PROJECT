@@ -3,7 +3,7 @@ cod/debug.log
 cod/main(28-10-2019).py
 cod/main2.py
 cod/main.pyc
-cod/__pycache__
+**/__pycache__
 cod/MechanicalSoup2.py
 cod/pruebaoraciones.html
 cod/temp.html
@@ -42,3 +42,5 @@ testseasier.ipynb
 /fasttxt
 /cod2
 train_file.csv
+cod/FormExample/FormExample/views.py
+cod/FormExample/FormExample/settings.py

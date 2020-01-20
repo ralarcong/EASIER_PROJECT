@@ -123,5 +123,5 @@ STATIC_URL = '/static/'
 
 
 STATICFILES_DIRS = (
-	'/home/users/ralarcon/Rodrigo/DOC/MLESSUI/cod/FormExample/FormExample/static',
+	'/home/jgalan/EASIER/EASIER_PROJECT/cod/FormExample/FormExample/static',
     )

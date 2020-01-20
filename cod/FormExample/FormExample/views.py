@@ -1,11 +1,12 @@
 #importing required packages
 from django.http import HttpResponse
 from django.template import loader
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import sys
 #sys.path.insert(0, '/home/users/ralarcon/Rodrigo/DOC/MLESSUI/cod')
-sys.path.insert(0,'C:/Users/RODRIGO/Documents/UC3M/DOC/DOC/MLESSUI/cod')
+#sys.path.insert(0,'C:/Users/RODRIGO/Documents/UC3M/DOC/DOC/MLESSUI/cod')
+sys.path.insert(0,'/home/jgalan/EASIER/EASIER_PROJECT/cod')
 
 import main
 #disabling csrf (cross site request forgery)
@@ -30,7 +31,7 @@ def index(request):
         #getting our showdata template
         if 'SimplificarURL' in request.POST:
             main.main(web)
-            return render_to_response('temp.html')
+            return render('temp.html')
         elif 'SimplificarTexto' in request.POST:
             main.main(web)
             return render_to_response('temp2.html')
