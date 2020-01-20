@@ -16,7 +16,7 @@ import time
 
 def main(webpage):
 	start = time.time()
-	#print("hello")
+	print("hello")
 	clasificadorobj = clasificador()
 	dictionariopalabras=worddictionary()
 	diccionariobabel=worddictionarybabel()
