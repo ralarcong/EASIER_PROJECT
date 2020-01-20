@@ -1,0 +1,26 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simplificando...</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/loader.css' %}"/>
+    <link href="{{ STATIC_URL }}loader.css" rel="stylesheet" type="text/css" />
+    <script src="{{ STATIC_URL }}loader.js" type="text/javascript"></script>
+    <script src="{% static 'js/loader.js' %}" type="text/javascript"></script>
+
+</head>
+<body>
+<form method="post" action="/getdata/">
+
+    <div align="center">
+        <h4>Simplificando:</h4>
+        <span style="color:#FFFFFF">{{ web }}</span>
+        <div class="bar">
+          <div class="circle"></div>
+          <p>Loading</p>
+        </div>
+    </div>
+</form>
+</body>
+</html>

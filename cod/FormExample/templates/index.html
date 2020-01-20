@@ -1,0 +1,49 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <link href="{{ STATIC_URL }}style.css" rel="stylesheet" type="text/css" >
+	
+	<link href="{{ STATIC_URL }}favicon.ico" rel="shortcut icon" type="image/x-icon" >
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+	<title>EASIER: SIMPLIFICADOR LÉXICO</title>
+</head>
+<body>
+<!--h1 align="center">EASIER</h1-->
+<!--h2 align="center">Sistema de simplificación léxica para hacer la lectura más fácil</h2-->
+{% load static %}
+<h1 style="text-align:center;"> <img src="{% static "LOGO_1_HORIZON_TEXT_COLOUR.png"%}"" alt="Imagen de presentación" class="imagen"></h1>
+<div class="container">
+	<div class="button_box2">
+		<a class="alternativo"><label for="web">Ingrese url de página a simplificar</label></a>
+		<form method="post" action="/getdata/" class="form-wrapper-2 cf">
+				<div class="input2">
+						<input type="text" name="web" id="web" placeholder="Escriba o copie url a simplificar..." required/>
+				</div>
+				<div class="button2">
+						<button type="submit" title="Simplificar por URL" name="SimplificarURL">Simplificar</button>
+				</div>
+		</form>
+	</div>
+
+	<div class="button_box3">
+		<a class="alternativo"><label for="text">Ingrese texto a simplificar</label></a>
+		<form method="post" action="/getdata/" class="form-wrapper-3 cf">
+				<div class="input3">
+					<textarea name="web" id="text" placeholder="Escriba o copie texto a simplificar..." required></textarea>
+				</div>
+				<div class="button3">
+						<button type="submit" title="Simplificar cadena de texto" name="SimplificarTexto">Simplificar</button>
+				</div>
+		</form>
+	</div>
+</div>
+
+<div class="footer">
+	<p><a href="http://labda.inf.uc3m.es/">Human Language and Accessibility Technologies (HULAT)</a></p>
+	<p>Universidad Carlos III de Madrid</p>
+</div>
+</body>
+</html>

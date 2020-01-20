@@ -1,0 +1,65 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Simplificador de Palabras Complejas</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+    <link href="{{ STATIC_URL }}style.css" rel="stylesheet" type="text/css" />
+    <style>
+        h3 { color: #efa400; font-family: "Great Vibes", cursive; font-size: 165px; line-height: 160px; font-weight: normal; margin-bottom: 0px; margin-top: 40px; text-align: center; text-shadow: 0 1px 1px #fff; }
+    </style>
+
+
+</head>
+<body>
+<h3 align="center">PROTOTIPO 2</h3>
+<div class="button_box2" align="center">
+    <form method="post" action="/getdata/" class="form-wrapper-2 cf">
+        <table>
+            <!--tr>
+                <td>Enter your name:</td>
+                <td><input type="text" name="name"/></td>
+            </tr>
+            <tr>
+                <td>Enter your email:</td>
+                <td><input type="email" name="email"/></td>
+            </tr>
+            <tr>
+                <td>Enter your phone:</td>
+                <td><input type="text" name="phone"/></td>
+            </tr-->
+            <tr>
+                <!--td>Enter Web Page:</td-->
+                <td>
+				<input type="text" name="web" placeholder="Ingresa url a simplificar..." required/>
+				</td>
+                <td>
+					<button type="submit" name="SimplificarURL">Simplificar por URL</button>
+                </td>
+								<!--td>
+				<label for="words-id">Words</label>
+				<input type="radio" id="words-id" name="words" value="0"/>
+				<label for="words-syn-id">Words-syn</label>
+				<input type="radio" id="words-syn-id" name="words-syn" value="1"/>
+				</td-->
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div class="button_box3" align="center">
+    <form method="post" action="/getdata/" class="form-wrapper-3 cf">
+        <table>
+				<td>
+				<input type="text" name="web" placeholder="Ingresa url a simplificar..." required/>
+				</td>
+				<td>
+					<button type="submit" name="SimplificarTexto">SimplificarTexto</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>
