@@ -1,7 +1,7 @@
 from gensim.models import KeyedVectors
 
 class word2vec:
-    model = KeyedVectors.load_word2vec_format("../../w2v/sbw_vectors.bin",binary=True)
+    model = KeyedVectors.load_word2vec_format("../../w2v/sbw_vectors.bin",binary=True) #path to Word2Vec model
 
     def __init__(self):
         self.data = []

@@ -12,11 +12,8 @@ from lemma import lemma
 from worddictionarybabel import worddictionarybabel
 from multiprocessing import Pool
 
-import time
 
 def main(webpage):
-	start = time.time()
-	print("hello")
 	clasificadorobj = clasificador()
 	dictionariopalabras=worddictionary()
 	diccionariobabel=worddictionarybabel()
@@ -68,7 +65,6 @@ def main(webpage):
 	lemmaobj = lemma()
 	Mechanicalsoupobj = MechanicalSoup()
 
-	#webpage="https://www.elmundo.es/blogs/elmundo/dragolandia/2019/10/11/siete-catorce-veintiuno.html"
 	webpage = "https://www.elmundo.es/papel/2019/07/02/5d15093bfc6c83370a8b467e.html"
 
 
@@ -184,8 +180,6 @@ def main(webpage):
 
 	if Mechanicalsoupobj.checkingurl(webpage):
 		Mechanicalsoupobj.CWItoHTML(paragraphreplaced, paragraph,title)
-		end = time.time()
-		print(end - start)
 
 	if __name__=="__main__":
 		main(webpage)

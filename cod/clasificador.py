@@ -26,13 +26,10 @@ spanish_postagger = StanfordPOSTagger('stanford-postagger-full-2017-06-09/models
                                       encoding='utf-8')
 
 class clasificador:
-    SCALED = 10 ** 6
-    # a function to count the number of syllables
+    SCALED = 10 ** 8
     word2vector = word2vec()
     Fasttextvector=FastText()
     Pyphenobj=Pyphen()
-    x=0
-    y=0
 
     @property
     def model(self):
@@ -102,6 +99,25 @@ class clasificador:
 
         prob = prob * self.SCALED
         return prob
+    
+    def getProbMultiUnigram(self,ngram, dic, size):
+        ngram = ngram.lower()
+        ngram=ngram.split()
+        lastprob=0
+        prob = 0
+        for word in ngram:
+            word=word.strip()
+            try:
+                prob = dic[word]
+                prob = prob / size
+                prob = prob * SCALED
+            except:
+                prob=0
+            if prob>lastprob and lastprob!=0:
+                lastprob=lastprob
+            else:
+                lastprob=prob
+        return lastprob
 
     # TERM FREQUENCY INVERSE DOCUMENT FREQUENCY
     def getTFIDF(self, ngram, dic, size):
@@ -119,17 +135,6 @@ class clasificador:
 
         prob = prob * frequency
         return prob
-
-    # def getZipF(self, word):
-    #     zipf = next(var for var in self.ambrank if (var[0][0] == word, [[0, 0, 0]], 0, 0))
-    #     return zipf
-
-    # def loadZipF(self, unigrams):
-    #     amb = [(w, c, len(wordnet.synsets(w))) for (w, c) in unigrams.items() if len(wordnet.synsets(w)) > 0]
-    #     amb_p_rank = ss.rankdata([p for (w, c, p) in amb])
-    #     amb_c_rank = ss.rankdata([c for (w, c, p) in amb])
-    #     amb_ranked = zip(amb, amb_p_rank, amb_c_rank)
-    #     self.ambrank = amb_ranked
 
     def getWindow(self, word, sentence, start):
 
@@ -206,7 +211,7 @@ class clasificador:
         return matrix
 
     #def getMatrix_train(self, path, trigrams, totalTris, bigrams, unigrams, totalBis, totalUnis):
-    def getMatrix_train(self, path, trigrams, totalTris, bigrams, unigrams, totalBis, totalUnis,E2Rgram):
+    def getMatrix_trainoriginal(self, path, trigrams, totalTris, bigrams, unigrams, totalBis, totalUnis,E2Rgram):
 
         numExamples = self.getLinesFile(path)
 
@@ -280,21 +285,24 @@ class clasificador:
                 vector_fet[5] = prob*100
                 vector_fet[6] = prob1*100
                 vector_fet[7] = prob2*100
-                # ector_fet[8] = TFIDF
                 vector_fet[8] = self.IsLower(word)
                 vector_fet[9] = self.IsUpper(word)
                 vector_fet[10] = self.IsDigit(word)
                 vector_fet[11] = self.IsTitle(word)
                 vector_fet[12] = self.IsPunctuation(word)
-                #vector_fet[13] = self.PosTag(word, sentence)
                 vector_fet[13] = self.ContainPunctuation(word)
-                vector_fet[14] = E2R
-                vector_fet[15:315] = (word2vectortemp * 10).tolist()
-                vector_fet[316:616] = (wordvectortemp * 10).tolist()
-                vector_fet[617] = class_word
+                if E2R==0:
+                    vector_fet[14] = E2R
+                    vector_fet[15:315] = (word2vectortemp * 10).tolist()
+                    vector_fet[316:616] = (wordvectortemp * 10).tolist()
+                    vector_fet[617] = class_word
+                else:
+                    vector_fet[14] = E2R
+                    vector_fet[15:315] = (word2vectortemp * 10).tolist()
+                    vector_fet[316:616] = (wordvectortemp * 10).tolist()
+                    vector_fet[617] = class_word
 
-                # por ultimo, reemplazamos el vector para el ejemplo con indexRow prob_2
-                #matrix[indexRow] = ['%.4f' % elem for elem in vector_fet]
+
                 matrix[indexRow] = vector_fet
 
                 # incrementamos en 1 para poder indicar el indice del siguiente ejemplo
@@ -306,39 +314,170 @@ class clasificador:
                 len_sen = len(sentence)
 
                 vector_fet = np.arange(numFeatures)
+                
+                prob = self.getProbMultiUnigram(word, unigrams, totalUnis)
 
-                ##wordvector = self.Fasttextvector.wordvector(word)
-                ##wordvectortemp = pd.Series(wordvector)
+                wordvector = self.Fasttextvector.wordvector(word)
+                wordvectortemp = pd.Series(wordvector)
 
-
-                ##E2R = self.E2RDic(E2Rgram, word)
+                word2vector=self.word2vector.wordvector(word)
+                word2vectortemp=pd.Series(word2vector)
+                
+                E2R = self.E2RDic(E2Rgram, word)
 
                 vector_fet[0] = len_word
                 vector_fet[1] = num_syl
                 vector_fet[2] = len_sen
                 vector_fet[3] = 0
                 vector_fet[4] = 0
-                vector_fet[5] = 0
+                vector_fet[5] = prob*100
                 vector_fet[6] = 0
                 vector_fet[7] = 0
-                # ector_fet[8] = TFIDF
                 vector_fet[8] = self.IsLower(word)
                 vector_fet[9] = self.IsUpper(word)
                 vector_fet[10] = self.IsDigit(word)
                 vector_fet[11] = self.IsTitle(word)
                 vector_fet[12] = self.IsPunctuation(word)
-                # vector_fet[13] = self.PosTag(word, sentence)
                 vector_fet[13] = self.ContainPunctuation(word)
                 vector_fet[14] = E2R
-                vector_fet[15:315] = [0]*300
-                vector_fet[316:616] = [0]*300
-                # el ultimo la clase
-                ##vector_fet[617] = 0
-                ##vector_fet[618] = 0
+                vector_fet[15:315] = (word2vectortemp * 10).tolist()
+                vector_fet[316:616] = (wordvectortemp * 10).tolist()
                 vector_fet[617] = class_word
 
-                # por ultimo, reemplazamos el vector para el ejemplo con indexRow prob_2
-                # matrix[indexRow] = ['%.4f' % elem for elem in vector_fet]
+                matrix[indexRow] = vector_fet
+
+                # incrementamos en 1 para poder indicar el indice del siguiente ejemplo
+                indexRow += 1
+
+        return matrix
+
+    def getMatrix_train(self, path, trigrams, totalTris, bigrams, unigrams, totalBis, totalUnis,E2Rgram):
+
+        numExamples = self.getLinesFile(path)
+
+        numFeatures =610
+        # creamos la matrix
+        matrix = np.empty(shape=[numExamples, numFeatures])
+
+        # abrimos el fichero
+        tsvin = open(path, "rt",encoding='utf-8')
+        tsvin = csv.reader(tsvin, delimiter='\t')
+
+        indexRow = 0
+
+        for row in tsvin:
+            id = row[0]  # id del parrafo donde ocurre la palabra
+            sentence = row[1]  # oracion
+            start = row[2]  # posicion inicial (caracter)
+            word = row[4]  # palabra a clasificar
+
+            class_word = row[9]  # clase: 1 o 0
+            if len(word.split()) < 2:
+                len_word = len(word)
+                num_syl = self.Pyphenobj.getNSyl(word)
+                len_sen = len(sentence)
+
+                # obtenemos su ventana
+
+                w_1, w_2, w1, w2 = self.getWindow(word, sentence, start)
+
+                # obtenemos los trigramas, bigramas y sus probabilidades
+                prob_2 = 0
+
+                trigramL = w_2 + ' ' + w_1 + ' ' + word
+                prob_2 = self.getProbability(trigramL, trigrams, totalTris)
+
+                prob_1 = 0
+                bigramL = w_1 + ' ' + word
+                prob_1 = self.getProbability(bigramL, bigrams, totalBis)
+
+                prob = self.getProbability(word, unigrams, totalUnis)
+
+                prob1 = 0
+                bigramR = word + ' ' + w1
+                prob1 = self.getProbability(bigramR, bigrams, totalBis)
+
+                prob2 = 0
+                trigramR = word + ' ' + w1 + ' ' + w2
+                prob2 = self.getProbability(trigramR, trigrams, totalTris)
+
+                # TFIDF=self.getTFIDF(word,unigrams,totalUnis)
+                wordvector = self.Fasttextvector.wordvector(word)
+                wordvectortemp = pd.Series(wordvector)
+
+                word2vector=self.word2vector.wordvector(word)
+                word2vectortemp=pd.Series(word2vector)
+
+                ##sim1, sim2 = self.NearestWords(sentence, word)
+
+                E2R = self.E2RDic(E2Rgram, word)
+
+                #ZipF = self.getZipF(word)
+
+                # podemos crear el vector, que sera un array de dimension numFeatures
+                vector_fet = np.arange(numFeatures)
+
+                #vector_fet[0] = len_word
+                #vector_fet[1] = num_syl
+                #vector_fet[2] = len_sen
+                #vector_fet[3] = prob_2*100
+                #vector_fet[4] = prob_1*100
+                #vector_fet[5] = prob*100
+                #vector_fet[6] = prob1*100
+                #vector_fet[7] = prob2*100
+                vector_fet[0] = self.IsLower(word)
+                vector_fet[1] = self.IsUpper(word)
+                vector_fet[2] = self.IsDigit(word)
+                vector_fet[3] = self.IsTitle(word)
+                vector_fet[4] = self.IsPunctuation(word)
+                vector_fet[5] = self.ContainPunctuation(word)
+                vector_fet[6] = E2R
+                vector_fet[7:307] = (word2vectortemp * 10).tolist()
+                vector_fet[308:608] = (wordvectortemp * 10).tolist()
+                vector_fet[609] = class_word
+
+
+                matrix[indexRow] = vector_fet
+
+                # incrementamos en 1 para poder indicar el indice del siguiente ejemplo
+                indexRow += 1
+
+            else:
+                len_word = len(word)
+                num_syl = self.Pyphenobj.getNSyl(word)
+                len_sen = len(sentence)
+
+                vector_fet = np.arange(numFeatures)
+                
+                prob = self.getProbMultiUnigram(word, unigrams, totalUnis)
+
+                wordvector = self.Fasttextvector.wordvector(word)
+                wordvectortemp = pd.Series(wordvector)
+
+                word2vector=self.word2vector.wordvector(word)
+                word2vectortemp=pd.Series(word2vector)
+                
+                E2R = self.E2RDic(E2Rgram, word)
+
+                #vector_fet[0] = len_word
+                #vector_fet[1] = num_syl
+                #vector_fet[2] = len_sen
+                #vector_fet[3] = prob_2*100
+                #vector_fet[4] = prob_1*100
+                #vector_fet[5] = prob*100
+                #vector_fet[6] = prob1*100
+                #vector_fet[7] = prob2*100
+                vector_fet[0] = self.IsLower(word)
+                vector_fet[1] = self.IsUpper(word)
+                vector_fet[2] = self.IsDigit(word)
+                vector_fet[3] = self.IsTitle(word)
+                vector_fet[4] = self.IsPunctuation(word)
+                vector_fet[5] = self.ContainPunctuation(word)
+                vector_fet[6] = E2R
+                vector_fet[7:307] = (word2vectortemp * 10).tolist()
+                vector_fet[308:608] = (wordvectortemp * 10).tolist()
+                vector_fet[609] = class_word
+
                 matrix[indexRow] = vector_fet
 
                 # incrementamos en 1 para poder indicar el indice del siguiente ejemplo
@@ -351,17 +490,21 @@ class clasificador:
 
         numExamples = self.getLinesString(path)
 
+        # Ojo!!!,este valor tendras que modificarlo, si anades mas features
         numFeatures = 617
         # creamos la matrix
         matrix = np.empty(shape=[numExamples, numFeatures])
 
         # abrimos el fichero
-
+        # tsvin=open(path,'rb')
+        # tsvin=path
+        # tsvin = csv.reader(tsvin, delimiter='\t')
         tsvin = path
 
+        # para llevar el indice del ejemplo (palabra) que estamos tratando
         indexRow = 0
 
-
+        # recorremos cada linea y obtenemos sus caracteristicas
         for row in tsvin:
             id = row[0]  # id del parrafo donde ocurre la palabra
             sentence = row[1]  # oracion
@@ -371,6 +514,8 @@ class clasificador:
             len_word = len(word)
             num_syl = self.Pyphenobj.getNSyl(word)
             len_sen = len(sentence)
+            # otra caracteristica: frecuencia de palabra
+            # otra caracteristica: frecuencia zipfian
 
             # obtenemos su ventana
             w_1, w_2, w1, w2 = self.getWindow(word, sentence, start)
@@ -411,6 +556,9 @@ class clasificador:
             # podemos crear el vector, que sera un array de dimension numFeatures
             vector_fet = np.arange(numFeatures)
 
+            # guardamos cada una de las caracteristicas
+            # da igual el orden, pero siempre debe ser el mismo!!!
+            
             vector_fet[0] = len_word
             vector_fet[1] = num_syl
             vector_fet[2] = len_sen
@@ -431,6 +579,8 @@ class clasificador:
             vector_fet[15:315] = (wordvectortemp*10).tolist()
             vector_fet[316:616] = (word2vectortemp * 10).tolist()
 
+            # por ultimo, reemplazamos el vector para el ejemplo con indexRow prob_2
+            #matrix[indexRow] = ['%.4f' % elem for elem in vector_fet]
             matrix[indexRow] = vector_fet
 
             # incrementamos en 1 para poder indicar el indice del siguiente ejemplo
@@ -441,7 +591,8 @@ class clasificador:
     def SvmClassifier(self, X_train, y_train):
 
         classifiers = [
-            svm.LinearSVC()
+            #svm.SVC()
+            svm.LinearSVC(max_iter=10000000)
         ]
 
         # en nuestro caso solo se ejecutara una vez, porque solo tnemos un algoritmo
@@ -452,8 +603,6 @@ class clasificador:
             clf.fit(X_train, y_train)
             filename = "SVMModel.sav"
             pickle.dump(clf, open(filename, 'wb'))
-
-    # return predicted
 
     def SVMPredict(self, matrix_deploy):
         predicted = self.model.predict(matrix_deploy)
@@ -467,10 +616,10 @@ class clasificador:
         bAcuracy = ac(y_dev, predicted)
         G1 = 2 * (bAcuracy * bRecall) / (bAcuracy + bRecall)
         f1x2=f1_score(y_dev, predicted, average='macro')
-        print(bAcuracy,bPrecis, bRecall, bFscore, G1, f1x2)
+        print(bAcuracy,bPrecis, bRecall, bFscore, G1, f1x2, bSupport)
 
     def SVMLoad(self):
-        filename = "MultitokenLinear0.7767.sav"
+        filename = "SVMModel.sav"
         self.model = pickle.load(open(filename, 'rb'))
 
     def asignarDic(self,path):
@@ -521,7 +670,9 @@ class clasificador:
             return 0
 
     def PosTag(self, word, sentence):
+        #tokens = nltk.word_tokenize(sentence.decode('utf8'))
         tokens=sentence.split()
+        #tagged = nltk.pos_tag(tokens)
         tagged_words = spanish_postagger.tag(tokens)
         posTag = None
         posTag = [tag for tag in tagged_words if tag[0] == word]
@@ -548,13 +699,32 @@ class clasificador:
         else:
             return 0, 0
 
+    # def E2RDic(self,ngram,word):
+    #     word2=word
+    #     if word2 in ngram:
+    #         return 0
+    #     else:
+    #         return 1
 
     def E2RDic(self,ngram,word):
-        word2=word
-        if word2 in ngram:
-            return 0
+        word2=word.split()
+        cont=0
+        if(len(word2)<2):
+            if word in ngram:
+                return 0
+            else:
+                return 1
         else:
-            return 1
+            for i in word2:
+                if i in ngram:
+                    cont=cont+0
+                else:
+                    cont=cont+1
+            if(cont>0):
+                return 1
+            else:
+                return 0
+
 
     def __init__(self):
         self.data = []
