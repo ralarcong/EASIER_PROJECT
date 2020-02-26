@@ -72,14 +72,10 @@ def main(webpage):
 
 		paragraph,title = Mechanicalsoupobj.paragraphfromweb(webpage)
 
-		#print (str(paragraph))
 		if paragraph != '':
 			x = text2tokens()
 
 			words = list()
-			# text1 = 'El copal se usa principalmente para sahumar en distintas ocasiones como lo son las fiestas religiosas y asimismo en misas. Las flores, hojas y frutos se usan para aliviar la tos y también se emplea como sedante.'
-
-			# text2 = text1.decode('utf8')
 			text = paragraph
 			sentencelist = x.text2sentence(text)
 
@@ -102,7 +98,6 @@ def main(webpage):
 						sentencevar = sentencetags[0][1]
 
 					for i in range(0, len(sentencetags)):
-						# en este punto deberiamos quedarnos con la oracion y ocn la palabra que vamos a usar de reemplazo
 						wordreplace = None
 						textreplaced = textreplace()
 						syn2 = list()
