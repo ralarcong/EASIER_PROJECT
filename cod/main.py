@@ -36,6 +36,8 @@ def main(webpage):
 	path = '../../E2R/unigram2_non_stop_words.csv'
 	uniE2R = clasificadorobj.loadDic3(path)
 
+	#Remove "#" if you want to train a new model---from here
+
 	#path = '../spanish/Spanish_Train.tsv'
 	#matrix_train = clasificadorobj.getMatrix_train(path, trigrams, totalTris, bigrams, unigrams, totalBis, totalUnis,uniE2R)
 
@@ -53,11 +55,11 @@ def main(webpage):
 	#X_dev = matrix_dev[:, 0:numCol - 1]
 	#y_dev = matrix_dev[:, -1]  # last column
 
-
-
 	#clasificadorobj.SvmClassifier(X_train, y_train)
 	clasificadorobj.SVMLoad()
 	#clasificadorobj.SVMEvaluation(y_dev,X_dev)
+
+	# to here
 
 	paragraphreplaced = list()
 
