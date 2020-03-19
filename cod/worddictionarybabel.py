@@ -1,7 +1,7 @@
 from pybabelnet.babelnet import BabelNet
 
 class worddictionarybabel:
-    bn = BabelNet(open("llavebabel.txt", "r").read())  # or BabelNet("your API key")
+    bn = BabelNet(open("path to key of balbelnet license", "r").read())  # or BabelNet("your API key")
 
     def babelsearch(self,palabra):
         listasyn = list()
