@@ -19,7 +19,7 @@ Computer Science Applications, 0,235, Q3]. http://journal.sepln.org/sepln/ojs/oj
 ## Usage
 If you want to see our results or try our code, go to cod\EASIERMAIN.ipynb.
 
-##Contact
+## Contact
 This work was supported by the Research Program of the Ministry of Economy and Competitiveness - Government of Spain,
 (DeepEMR project TIN2017-87548-C2-1-R). Contact address: ralarcon@inf.uc3m.es
 
