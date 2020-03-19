@@ -119,23 +119,6 @@ class clasificador:
                 lastprob=prob
         return lastprob
 
-    # TERM FREQUENCY INVERSE DOCUMENT FREQUENCY
-    def getTFIDF(self, ngram, dic, size):
-        ngram = ngram.lower()
-
-        ngram = ngram.strip()
-        prob = 0
-        frequency = 0
-        try:
-            prob = dic[ngram]
-            frequency = dic[ngram]
-            prob = math.log(size / prob)
-        except:
-            pass
-
-        prob = prob * frequency
-        return prob
-
     def getWindow(self, word, sentence, start):
 
         # para obtener los tokens, dividimos por ' '
@@ -211,16 +194,16 @@ class clasificador:
         return matrix
 
     #def getMatrix_train(self, path, trigrams, totalTris, bigrams, unigrams, totalBis, totalUnis):
-    def getMatrix_train(self, path, trigrams, totalTris, bigrams, unigrams, totalBis, totalUnis,E2Rgram):
+    def getMatrix_train(self, path, trigrams, totalTris, bigrams, unigrams, totalBis, totalUnis, E2Rgram):
 
         numExamples = self.getLinesFile(path)
 
-        numFeatures =618
+        numFeatures = 618
         # creamos la matrix
         matrix = np.empty(shape=[numExamples, numFeatures])
 
         # abrimos el fichero
-        tsvin = open(path, "rt",encoding='utf-8')
+        tsvin = open(path, "rt", encoding='utf-8')
         tsvin = csv.reader(tsvin, delimiter='\t')
 
         indexRow = 0
@@ -265,14 +248,14 @@ class clasificador:
                 wordvector = self.Fasttextvector.wordvector(word)
                 wordvectortemp = pd.Series(wordvector)
 
-                word2vector=self.word2vector.wordvector(word)
-                word2vectortemp=pd.Series(word2vector)
+                word2vector = self.word2vector.wordvector(word)
+                word2vectortemp = pd.Series(word2vector)
 
                 ##sim1, sim2 = self.NearestWords(sentence, word)
 
                 E2R = self.E2RDic(E2Rgram, word)
 
-                #ZipF = self.getZipF(word)
+                # ZipF = self.getZipF(word)
 
                 # podemos crear el vector, que sera un array de dimension numFeatures
                 vector_fet = np.arange(numFeatures)
@@ -280,28 +263,21 @@ class clasificador:
                 vector_fet[0] = len_word
                 vector_fet[1] = num_syl
                 vector_fet[2] = len_sen
-                vector_fet[3] = prob_2*100
-                vector_fet[4] = prob_1*100
-                vector_fet[5] = prob*100
-                vector_fet[6] = prob1*100
-                vector_fet[7] = prob2*100
+                vector_fet[3] = prob_2 * 100
+                vector_fet[4] = prob_1 * 100
+                vector_fet[5] = prob * 100
+                vector_fet[6] = prob1 * 100
+                vector_fet[7] = prob2 * 100
                 vector_fet[8] = self.IsLower(word)
                 vector_fet[9] = self.IsUpper(word)
                 vector_fet[10] = self.IsDigit(word)
                 vector_fet[11] = self.IsTitle(word)
                 vector_fet[12] = self.IsPunctuation(word)
                 vector_fet[13] = self.ContainPunctuation(word)
-                if E2R==0:
-                    vector_fet[14] = E2R
-                    vector_fet[15:315] = (word2vectortemp * 10).tolist()
-                    vector_fet[316:616] = (wordvectortemp * 10).tolist()
-                    vector_fet[617] = class_word
-                else:
-                    vector_fet[14] = E2R
-                    vector_fet[15:315] = (word2vectortemp * 10).tolist()
-                    vector_fet[316:616] = (wordvectortemp * 10).tolist()
-                    vector_fet[617] = class_word
-
+                vector_fet[14] = E2R
+                vector_fet[15:315] = (word2vectortemp * 10).tolist()
+                vector_fet[316:616] = (wordvectortemp * 10).tolist()
+                vector_fet[617] = class_word
 
                 matrix[indexRow] = vector_fet
 
@@ -314,15 +290,15 @@ class clasificador:
                 len_sen = len(sentence)
 
                 vector_fet = np.arange(numFeatures)
-                
+
                 prob = self.getProbMultiUnigram(word, unigrams, totalUnis)
 
                 wordvector = self.Fasttextvector.wordvector(word)
                 wordvectortemp = pd.Series(wordvector)
 
-                word2vector=self.word2vector.wordvector(word)
-                word2vectortemp=pd.Series(word2vector)
-                
+                word2vector = self.word2vector.wordvector(word)
+                word2vectortemp = pd.Series(word2vector)
+
                 E2R = self.E2RDic(E2Rgram, word)
 
                 vector_fet[0] = len_word
@@ -330,18 +306,18 @@ class clasificador:
                 vector_fet[2] = len_sen
                 vector_fet[3] = 0
                 vector_fet[4] = 0
-                vector_fet[5] = prob*100
+                vector_fet[5] = 0
                 vector_fet[6] = 0
                 vector_fet[7] = 0
-                vector_fet[8] = self.IsLower(word)
-                vector_fet[9] = self.IsUpper(word)
-                vector_fet[10] = self.IsDigit(word)
-                vector_fet[11] = self.IsTitle(word)
-                vector_fet[12] = self.IsPunctuation(word)
-                vector_fet[13] = self.ContainPunctuation(word)
-                vector_fet[14] = E2R
-                vector_fet[15:315] = (word2vectortemp * 10).tolist()
-                vector_fet[316:616] = (wordvectortemp * 10).tolist()
+                vector_fet[8] = 1
+                vector_fet[9] = 1
+                vector_fet[10] = 1
+                vector_fet[11] = 1
+                vector_fet[12] = 1
+                vector_fet[13] = 1
+                vector_fet[14] = 1
+                vector_fet[15:315] = [0] * 300
+                vector_fet[316:616] = [0] * 300
                 vector_fet[617] = class_word
 
                 matrix[indexRow] = vector_fet
@@ -457,8 +433,7 @@ class clasificador:
     def SvmClassifier(self, X_train, y_train):
 
         classifiers = [
-            #svm.SVC()
-            svm.LinearSVC(max_iter=10000000)
+            svm.SVC()
         ]
 
         # en nuestro caso solo se ejecutara una vez, porque solo tnemos un algoritmo
@@ -482,7 +457,7 @@ class clasificador:
         bAcuracy = ac(y_dev, predicted)
         G1 = 2 * (bAcuracy * bRecall) / (bAcuracy + bRecall)
         f1x2=f1_score(y_dev, predicted, average='macro')
-        print(bAcuracy,bPrecis, bRecall, bFscore, G1, f1x2, bSupport)
+        print("Acuraccy: "+bAcuracy,"Precision: "+bPrecis, "Recall: "+bRecall, "F1-Score: "+bFscore)
 
     def SVMLoad(self):
         filename = "SVMModel.sav"

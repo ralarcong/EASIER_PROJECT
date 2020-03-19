@@ -19,7 +19,6 @@ cod/modelos/
 cod/clasificador.pyc
 cod/DOC01
 cod/FastText.pyc
-cod/main.py
 cod/Multitoken0.7134.sav
 cod/Multitoken0.8273.sav
 cod/MultitokenLinear0.8292.sav
@@ -46,3 +45,4 @@ cod/FormExample/FormExample/views.py
 cod/FormExample/FormExample/settings.py
 cod/llavebabel.txt
 Untitled.ipynb
+cod/main.py
