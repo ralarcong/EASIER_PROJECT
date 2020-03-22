@@ -21,7 +21,7 @@ If you want to see our results or try our code, go to cod\EASIERMAIN.ipynb.
 
 ## Contact
 This work was supported by the Research Program of the Ministry of Economy and Competitiveness - Government of Spain,
-(DeepEMR project TIN2017-87548-C2-1-R). Contact address: ralarcon@inf.uc3m.es
+(DeepEMR project TIN2017-87548-C2-1-R). Contact address: ralarcon@inf.uc3m.es - lmoreno@inf.uc3m.es
 
 
 
